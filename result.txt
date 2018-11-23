@@ -1,0 +1,56 @@
+2conv+1fc,fintuned:
+
+test accuracy: 0.785417
+test loss: 0.961270
+
+train accuracy: 0.977187
+average training loss: 0.067490
+
+2conv+2fc, finetuned:
+
+test accuracy: 0.773333
+test loss: 0.902112
+iteration: 26, loss: 0.088467
+iteration: 27, loss: 0.089497
+iteration: 28, loss: 0.083560
+iteration: 29, loss: 0.083615
+iteration: 30, loss: 0.081021
+
+test accuracy: 0.819583
+test loss: 0.771034
+
+train accuracy: 0.979375
+average training loss: 0.062812
+
+3conv+1fc, finetuned:
+
+test accuracy: 0.808750
+test loss: 0.849035
+iteration: 26, loss: 0.074696
+iteration: 27, loss: 0.078298
+iteration: 28, loss: 0.097366
+iteration: 29, loss: 0.086226
+iteration: 30, loss: 0.084771
+
+test accuracy: 0.764167
+test loss: 1.089480
+
+train accuracy: 0.944792 (more layers should need more iterations to bp, since we used the same number of iterations, this is lower)
+average training loss: 0.141689
+
+3conv+2fc, finetuned:
+
+test accuracy: 0.807500
+test loss: 0.860273
+
+train accuracy: 0.985938
+average training loss: 0.044846
+
+smallsizefilters finetuned:
+
+train accuracy: 0.985833
+average training loss: 0.057200
+
+test accuracy: 0.805417
+test loss: 0.805043
+

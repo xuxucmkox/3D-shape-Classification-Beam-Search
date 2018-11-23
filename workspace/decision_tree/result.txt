@@ -1,0 +1,66 @@
+1st:
+
+iteration: 1, gini impurity: 2.032025
+snapshoting to bp_finetune_iter_1
+iteration: 2, gini impurity: 0.834223
+snapshoting to bp_finetune_iter_2
+iteration: 3, gini impurity: 0.039262
+snapshoting to bp_finetune_iter_3
+iteration: 4, gini impurity: 0.001041
+snapshoting to bp_finetune_iter_4
+iteration: 5, gini impurity: 0.000000
+snapshoting to bp_finetune_iter_5
+iteration: 6, gini impurity: 0.000000
+snapshoting to bp_finetune_iter_6
+iteration: 7, gini impurity: 0.000000
+snapshoting to bp_finetune_iter_7
+iteration: 8, gini impurity: 0.000000
+snapshoting to bp_finetune_iter_8
+iteration: 9, gini impurity: 0.000000
+snapshoting to bp_finetune_iter_9
+iteration: 10, gini impurity: 0.000000
+snapshoting to bp_finetune_iter_10
+
+2nd:
+
+number of clasees in left: 5.000000,number of clasees in right: 5.000000 
+iteration: 1, gini impurity: 1.164508
+snapshoting to bp_finetune_iter_1
+number of clasees in left: 5.000000,number of clasees in right: 5.000000 
+iteration: 2, gini impurity: 1.937284
+snapshoting to bp_finetune_iter_2
+number of clasees in left: 5.000000,number of clasees in right: 5.000000 
+iteration: 3, gini impurity: 2.296814
+snapshoting to bp_finetune_iter_3
+number of clasees in left: 5.000000,number of clasees in right: 5.000000 
+iteration: 4, gini impurity: 1.719964
+snapshoting to bp_finetune_iter_4
+number of clasees in left: 5.000000,number of clasees in right: 5.000000 
+iteration: 5, gini impurity: 1.563286
+snapshoting to bp_finetune_iter_5
+number of clasees in left: 5.000000,number of clasees in right: 5.000000 
+iteration: 6, gini impurity: 1.901372
+snapshoting to bp_finetune_iter_6
+number of clasees in left: 5.000000,number of clasees in right: 5.000000 
+iteration: 7, gini impurity: 2.027248
+snapshoting to bp_finetune_iter_7
+number of clasees in left: 5.000000,number of clasees in right: 5.000000 
+iteration: 8, gini impurity: 1.741095
+snapshoting to bp_finetune_iter_8
+number of clasees in left: 5.000000,number of clasees in right: 5.000000 
+iteration: 9, gini impurity: 1.590825
+snapshoting to bp_finetune_iter_9
+number of clasees in left: 5.000000,number of clasees in right: 5.000000 
+iteration: 10, gini impurity: 1.663801
+snapshoting to bp_finetune_iter_10
+
+Sinisa:
+
+E.g, loss is defined using “if” statements:
+- If all classes are in only one branch, then loss is 1 for all data samples.
+- If there is exactly one class in either of the two branches, say class k is in the left branch, and majority of samples from class k are in the right branch, then again loss is 1 for all data samples. 
+- If there is exactly one class in either of the two branches, say class k is in the left branch, and majority of samples from class k are in the left branch, then loss is 1 for all data samples of class k in the right branch. 
+- Otherwise, loss is computed as we had it before.
+
+Behrooz:
+ think enforces higher level constraints. I asked him to choose the ground truth for the top 50% classes by majority vote and the other 50% of the classes with the minority vote. 

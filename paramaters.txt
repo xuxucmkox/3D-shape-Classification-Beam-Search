@@ -1,0 +1,433 @@
+3conv2fc:
+
+param.network = {
+    struct('type', 'input');
+    struct('type', 'convolution', 'outputMaps', 48, 'kernelSize', 6, 'actFun', 'sigmoid', 'stride', 2);
+    struct('type', 'convolution', 'outputMaps', 160, 'kernelSize', 5, 'actFun', 'sigmoid', 'stride', 2);
+    struct('type', 'convolution', 'outputMaps', 512, 'kernelSize', 4, 'actFun', 'sigmoid', 'stride', 1);
+    struct('type', 'fullconnected', 'size', 1200, 'actFun', 'sigmoid');
+    struct('type', 'fullconnected', 'size', 4000, 'actFun', 'sigmoid');
+};
+
+fprintf('\nmodel initialzation completed!\n\n');
+param = [];
+param.layer = 2;
+param.epochs = 15;
+param.lr = 0.01;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0.01;
+param.sparse_cost = 0.001;
+[model] = crbm2(model, data_list, param);
+%save('model30_l2','model');
+
+param = [];
+param.layer = 3;
+param.epochs = 1;
+param.lr = 0.01;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0.02;
+param.sparse_cost = 0.002;
+[model] = crbm(model, data_list, param);
+%save('model30_l3','model');
+
+param = [];
+param.layer = 4;
+param.epochs = 50;
+param.lr = 0.01;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0;
+param.sparse_cost = 0;
+[model] = crbm(model, data_list, param);
+%save('model30_l4','model');
+
+[hidden_prob_h4, train_label] = propagate_data(model, data_list, 5);
+
+param = [];
+param.layer = 5;
+param.epochs = 80;
+param.lr = 0.003;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0;
+param.sparse_cost = 0;
+new_list = balance_data(data_list,param.batch_size);
+hidden_prob_h4 = reshape(hidden_prob_h4, size(hidden_prob_h4,1),[]);
+[model, hidden_prob_h5] = rbm(model, new_list, hidden_prob_h4, param);
+%save('model30_l5','model');
+
+param = [];
+param.layer = 6;
+param.epochs = 150;
+param.lr = 0.003;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.5];
+param.kPCD = 1;
+param.persistant = 1;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0;
+param.sparse_cost = 0;
+new_list = balance_data(data_list,param.batch_size);
+[model] = rbm_last(model, new_list, [train_label, hidden_prob_h5], param);
+
+param = [];
+param.epochs = 100;
+param.lr = 0.1;
+param.weight_decay = 5*10^-4;
+param.momentum = 0.9;
+param.batch_size = 32;
+param.snapshot_iter = 10;
+param.snapshot_name = 'bp_finetune_iter';
+param.test_iter = 5;
+batch_size = param.batch_size;
+
+
+2conv1fc:
+
+param.network = {
+    struct('type', 'input');
+    struct('type', 'convolution', 'outputMaps', 48, 'kernelSize', 6, 'actFun', 'sigmoid', 'stride', 2);
+    struct('type', 'convolution', 'outputMaps', 160, 'kernelSize', 5, 'actFun', 'sigmoid', 'stride', 2);
+    struct('type', 'fullconnected', 'size', 1200, 'actFun', 'sigmoid');
+};
+
+param = [];
+param.layer = 2;
+param.epochs = 15;
+param.lr = 0.01;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0.01;
+param.sparse_cost = 0.001;
+[model] = crbm2(model, data_list, param);
+%save('model30_l2','model');
+
+param = [];
+param.layer = 3;
+param.epochs = 1;
+param.lr = 0.01;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0.02;
+param.sparse_cost = 0.002;
+[model] = crbm(model, data_list, param);
+%save('model30_l3','model');
+
+[hidden_prob_h3, train_label] = propagate_data(model, data_list, 4);
+
+param = [];
+param.layer = 4;
+param.epochs = 10;
+param.lr = 0.003;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0;
+param.sparse_cost = 0;
+new_list = balance_data(data_list,param.batch_size);
+% last layer does not require reshaping
+% hidden_prob_h3 = reshape(hidden_prob_h3, size(hidden_prob_h3,1),[]);
+[model] = rbm_last(model, new_list, [train_label, hidden_prob_h3], param);
+
+param = [];
+param.epochs = 30;
+param.lr = 0.1;
+param.weight_decay = 5*10^-4;
+param.momentum = 0.9;
+param.batch_size = 32;
+param.snapshot_iter = 10;
+param.snapshot_name = 'bp_finetune_iter';
+param.test_iter = 5;
+batch_size = param.batch_size;
+
+2conv+2fc:
+
+param.network = {
+    struct('type', 'input');
+    struct('type', 'convolution', 'outputMaps', 48, 'kernelSize', 6, 'actFun', 'sigmoid', 'stride', 2);
+    struct('type', 'convolution', 'outputMaps', 160, 'kernelSize', 5, 'actFun', 'sigmoid', 'stride', 2);
+    struct('type', 'fullconnected', 'size', 1200, 'actFun', 'sigmoid');
+    struct('type', 'fullconnected', 'size', 4000, 'actFun', 'sigmoid');
+};
+
+% This is to duplicate the labels for the final RBM in order to enforce the
+% label training.
+param.duplicate = 10;
+param.validation = 1;
+param.data_size = [data_size, data_size, data_size, 1];
+
+model = initialize_cdbn(param);
+
+fprintf('\nmodel initialzation completed!\n\n');
+param = [];
+param.layer = 2;
+param.epochs = 15;
+param.lr = 0.01;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0.01;
+param.sparse_cost = 0.001;
+[model] = crbm2(model, data_list, param);
+save('model30_l2','model');
+
+param = [];
+param.layer = 3;
+param.epochs = 1;
+param.lr = 0.01;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0.02;
+param.sparse_cost = 0.002;
+[model] = crbm(model, data_list, param);
+save('model30_l3','model');
+
+[hidden_prob_h3, train_label] = propagate_data(model, data_list, 4);
+
+param = [];
+param.layer = 4;
+param.epochs = 10;
+param.lr = 0.003;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0;
+param.sparse_cost = 0;
+new_list = balance_data(data_list,param.batch_size);
+hidden_prob_h3 = reshape(hidden_prob_h3, size(hidden_prob_h3,1),[]);
+[model, hidden_prob_h4] = rbm(model, new_list, hidden_prob_h3, param);
+save('model30_l4','model');
+
+param = [];
+param.layer = 5;
+param.epochs = 20;
+param.lr = 0.003;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.5];
+param.kPCD = 1;
+param.persistant = 1;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0;
+param.sparse_cost = 0;
+new_list = balance_data(data_list,param.batch_size);
+[model] = rbm_last(model, new_list, [train_label, hidden_prob_h4], param);
+
+param = [];
+param.epochs = 30;
+param.lr = 0.1;
+param.weight_decay = 5*10^-4;
+param.momentum = 0.9;
+param.batch_size = 32;
+param.snapshot_iter = 10;
+param.snapshot_name = 'bp_finetune_iter';
+param.test_iter = 5;
+batch_size = param.batch_size;
+
+3conv+1fc:
+
+param.network = {
+    struct('type', 'input');
+    struct('type', 'convolution', 'outputMaps', 48, 'kernelSize', 6, 'actFun', 'sigmoid', 'stride', 2);
+    struct('type', 'convolution', 'outputMaps', 160, 'kernelSize', 5, 'actFun', 'sigmoid', 'stride', 2);
+    struct('type', 'convolution', 'outputMaps', 512, 'kernelSize', 4, 'actFun', 'sigmoid', 'stride', 1);
+    struct('type', 'fullconnected', 'size', 1200, 'actFun', 'sigmoid');
+};
+
+% This is to duplicate the labels for the final RBM in order to enforce the
+% label training.
+param.duplicate = 10;
+param.validation = 1;
+param.data_size = [data_size, data_size, data_size, 1];
+
+model = initialize_cdbn(param);
+
+fprintf('\nmodel initialzation completed!\n\n');
+param = [];
+param.layer = 2;
+param.epochs = 15;
+param.lr = 0.01;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0.01;
+param.sparse_cost = 0.001;
+[model] = crbm2(model, data_list, param);
+save('model30_l2','model');
+
+param = [];
+param.layer = 3;
+param.epochs = 1;
+param.lr = 0.01;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0.02;
+param.sparse_cost = 0.002;
+[model] = crbm(model, data_list, param);
+save('model30_l3','model');
+
+param = [];
+param.layer = 4;
+param.epochs = 50;
+param.lr = 0.01;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0;
+param.sparse_cost = 0;
+[model] = crbm(model, data_list, param);
+save('model30_l4','model');
+
+[hidden_prob_h4, train_label] = propagate_data(model, data_list, 5);
+
+param = [];
+param.layer = 5;
+param.epochs = 10;
+param.lr = 0.003;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.5];
+param.kPCD = 1;
+param.persistant = 1;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0;
+param.sparse_cost = 0;
+new_list = balance_data(data_list,param.batch_size);
+[model] = rbm_last(model, new_list, [train_label, hidden_prob_h4], param);
+
+param = [];
+param.epochs = 30;
+param.lr = 0.1;
+param.weight_decay = 5*10^-4;
+param.momentum = 0.9;
+param.batch_size = 32;
+param.snapshot_iter = 10;
+param.snapshot_name = 'bp_finetune_iter';
+param.test_iter = 5;
+batch_size = param.batch_size;
+
+small initial model:
+
+param.network = {
+    struct('type', 'input');
+    struct('type', 'convolution', 'outputMaps', 24, 'kernelSize', 6, 'actFun', 'sigmoid', 'stride', 2);
+    struct('type', 'convolution', 'outputMaps', 40, 'kernelSize', 5, 'actFun', 'sigmoid', 'stride', 2);
+    struct('type', 'fullconnected', 'size', 600, 'actFun', 'sigmoid');
+};
+
+% This is to duplicate the labels for the final RBM in order to enforce the
+% label training.
+param.duplicate = 10;
+param.validation = 1;
+param.data_size = [data_size, data_size, data_size, 1];
+
+model = initialize_cdbn(param);
+
+fprintf('\nmodel initialzation completed!\n\n');
+param = [];
+param.layer = 2;
+param.epochs = 15;
+param.lr = 0.01;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0.01;
+param.sparse_cost = 0.001;
+[model] = crbm2(model, data_list, param);
+save('model30_l2','model');
+
+param = [];
+param.layer = 3;
+param.epochs = 1;
+param.lr = 0.01;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.9];
+param.kPCD = 1;
+param.persistant = 0;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0.02;
+param.sparse_cost = 0.002;
+[model] = crbm(model, data_list, param);
+save('model30_l3','model');
+
+[hidden_prob_h3, train_label] = propagate_data(model, data_list, 4);
+
+param = [];
+param.layer = 4;
+param.epochs = 10;
+param.lr = 0.003;
+param.weight_decay = 1e-5;
+param.momentum = [0.5, 0.5];
+param.kPCD = 1;
+param.persistant = 1;
+param.batch_size = 32;
+param.sparse_damping = 0;
+param.sparse_target = 0;
+param.sparse_cost = 0;
+new_list = balance_data(data_list,param.batch_size);
+[model] = rbm_last(model, new_list, [train_label, hidden_prob_h3], param);
+
+param = [];
+param.epochs = 30;
+param.lr = 0.1;
+param.weight_decay = 5*10^-4;
+param.momentum = 0.9;
+param.batch_size = 32;
+param.snapshot_iter = 10;
+param.snapshot_name = 'bp_finetune_iter';
+param.test_iter = 5;
+batch_size = param.batch_size;
