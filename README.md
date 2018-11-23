@@ -1,3 +1,8 @@
+# Beam Search for Learning a Deep Convolutional Neural Network of 3D Shapes
+This is the my code for paper "Beam Search for Learning a Deep Convolutional Neural Network of 3D Shapes" (https://arxiv.org/pdf/1612.04774.pdf) based on previous 3D ShapeNets work.
+------------------------------------------------------------------------
+below is the original readme for 3D ShapeNets
+------------------------------------------------------------------------
 # 3D ShapeNets: A Deep Representation for Volumetric Shapes
 ------------------------------------------------------------------------
 
